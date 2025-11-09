@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pythagoras</title>
+</head>
+<body>
+    <div style="border:1px solid #ccc; padding:20px; width:340px; margin:40px auto; border-radius:8px; box-shadow:0 2px 8px #eee;">
+        <h2>Pythagoras Theorem Calculator</h2>
+        <label for="a">Side a:</label>
+        <input type="number" id="a" placeholder="Enter side a" style="margin-bottom:8px; width:90%;" oninput="drawTriangle()"><br>
+        <label for="b">Side b:</label>
+        <input type="number" id="b" placeholder="Enter side b" style="margin-bottom:8px; width:90%;" oninput="drawTriangle()"><br>
+        <button onclick="calculateHypotenuse(); drawTriangle();" style="width:100%; margin-top:10px;">Calculate Hypotenuse</button>
+        <p id="result" style="margin-top:15px; font-weight:bold;"></p>
+        <canvas id="triangleCanvas" width="300" height="200" style="display:block; margin:20px auto 0; background:#fafafa; border:1px solid #eee; border-radius:4px;"></canvas>
+    </div>
+    <script>
+    function drawTriangle() {
+        const canvas = document.getElementById('triangleCanvas');
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        let a = parseFloat(document.getElementById('a').value);
+        let b = parseFloat(document.getElementById('b').value);
+
+        if (isNaN(a) || isNaN(b) || a <= 0 || b <= 0) {
+            // Draw placeholder triangle
+            ctx.strokeStyle = "#bbb";
+            ctx.beginPath();
+            ctx.moveTo(40, 160);
+            ctx.lineTo(240, 160);
+            ctx.lineTo(40, 60);
+            ctx.closePath();
+            ctx.stroke();
+            return;
+        }
+
+        // Scale sides to fit canvas
+        const maxLen = Math.max(a, b);
+        const scale = 120 / maxLen;
+        a *= scale;
+        b *= scale;
+
+        // Draw triangle
+        const startX = 40, startY = 160;
+        ctx.strokeStyle = "#0074D9";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(startX, startY); // right angle
+        ctx.lineTo(startX + a, startY); // side a
+        ctx.lineTo(startX + a, startY - b); // side b
+        ctx.closePath();
+        ctx.stroke();
+
+        // Label sides
+        ctx.fillStyle = "#333";
+        ctx.font = "14px Arial";
+        ctx.fillText("a", startX + a / 2 - 10, startY + 18);
+        ctx.fillText("b", startX + a + 8, startY - b / 2);
+        ctx.fillText("c", startX + a / 2, startY - b / 2 - 8);
+    }
+    window.onload = drawTriangle;
+    </script>
+    <script>
+    function calculateHypotenuse() {
+        const a = parseFloat(document.getElementById('a').value);
+        const b = parseFloat(document.getElementById('b').value);
+        if (isNaN(a) || isNaN(b)) {
+            document.getElementById('result').textContent = 'Please enter valid numbers for both sides.';
+            return;
+        }
+        const c = Math.sqrt(a * a + b * b);
+        document.getElementById('result').textContent = `Hypotenuse (c): ${c.toFixed(2)}`;
+    }
+    </script>
+</body>
+<script src="index.js"></script>
+</html>
